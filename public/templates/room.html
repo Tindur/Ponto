@@ -1,0 +1,17 @@
+<div ng-controller="RoomController">
+
+<h2> {{ room.name }} </h2>
+
+<p> {{room.topic }} </p>
+
+
+<div id="messages">
+	<p ng-repeat="message in room.messages"> <i> {{message.date | date: 'dd.MM.yyyy HH:mm' }} </i> <b><{{message.user}}> : </b> {{message.msg}} </p>
+	<div>
+		<textarea id="message" ng-model="messagetext" placeholder="What's on your mind?" name="message"></textarea>
+		<input type="submit" ng-click="sendMessage()" value="Send!" />
+		<input type="hidden" value="{{room.id}}" />
+	</div>
+</div>
+
+</div>

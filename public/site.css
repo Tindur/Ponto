@@ -1,0 +1,11 @@
+
+
+
+
+.createChat input {
+	display: block;
+}
+
+#messages {
+	border: 1px solid black;
+}
