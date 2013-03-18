@@ -3,7 +3,7 @@ var app = angular.module('PontoApp', ['ngResource', 'ui']);
 
 
 app.config(function($routeProvider, $locationProvider) {
-	$locationProvider.html5Mode(true);
+	//$locationProvider.html5Mode(true);
 	$routeProvider.
 	 	when ('/rooms/:id', { 
 	 		templateUrl: '/templates/room.html',
@@ -13,7 +13,7 @@ app.config(function($routeProvider, $locationProvider) {
 	 		templateUrl: '/templates/rooms.html',
 	 		controller: 'RoomsController'
 	 	}).
-	 	when ('/site.html', {
+	 	when ('/', {
 	 		redirectTo: '/login'
 	 	}).
 	 	when ('/login', {

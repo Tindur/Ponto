@@ -1,10 +1,18 @@
 app.controller( 'RoomController', ['$resource', '$scope', '$routeParams', 'RoomsModel',  function ($resource, $scope, $routeParams, RoomsModel) {
+	$scope.room = {};
+	$scope.room.users = [];
+
+	now.ready(function(){
+		now.joinRoom($routeParams.id);
+	});	
 	$scope.room = RoomsModel.getSingle({roomId: $routeParams.id});
-	now.joinRoom($routeParams.id);
+	console.log('room controller');
 
 	now.receiveUser = function(theUser) {
 		$scope.$apply( function() {
+			console.log(theUser, 'theUser');
 			$scope.room.users.push(theUser);
+			console.log('after push ');
 			var newUserJoinedMsg = {};
 			newUserJoinedMsg.date = theUser.joined;
 			newUserJoinedMsg.user = '+';

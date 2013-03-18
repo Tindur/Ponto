@@ -1,25 +1,21 @@
-<div ng-controller="RoomsController">
+<p>Welcome {{username}}! Pick a chatroom and start chattin' with strangers</p>
 
-	<p>Welcome {{username}}! Pick a chatroom and start chattin' with strangers</p>
+<ul>
+	<li ng-model="rooms" ng-repeat="room in rooms">
+		<a ng-href="#/rooms/{{room.id}}" >
+			{{room.name}}
+		</a>
+		<p>
+			{{room.topic}}
+		</p>
+	</li>
+</ul>
 
-	<ul>
-		<li ng-model="rooms" ng-repeat="room in rooms">
-			<a href="/rooms/{{room.id}}">
-				{{room.name}}
-			</a>
-			<p>
-				{{room.topic}}
-			</p>
-		</li>
-	</ul>
-
-	<div>
-		<fieldset>
-			<legend>Create a chat</legend>
-			<input type="text" name="name" ng-model="roomName" placeholder="Chatroom's name " id="name" />
-			<input type="text" name="topic" ng-model="roomTopic" placeholder="Topic of chat" id="topic" />
-			<input type="submit" ng-click="createRoom()" value="Create!" />
-		</fieldset>
-	</div>
-
+<div>
+	<fieldset>
+		<legend>Create a chat</legend>
+		<input type="text" name="name" ng-model="roomName" placeholder="Chatroom's name " id="name" />
+		<input type="text" name="topic" ng-model="roomTopic" placeholder="Topic of chat" id="topic" />
+		<input type="submit" ng-click="createRoom()" value="Create!" />
+	</fieldset>
 </div>

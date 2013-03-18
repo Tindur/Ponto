@@ -2,6 +2,8 @@ app.controller( 'RoomsController', ['$resource', '$scope', 'RoomsModel',  functi
 	$scope.rooms = RoomsModel.getAll();
 	$scope.username = now.name;
 
+	console.log('romms controller');
+
 	$scope.createRoom = function () {
 		if($scope.roomName !== "" && $scope.roomTopic !== "") {
 			now.postRoom($scope.roomName, $scope.roomTopic);

@@ -1,9 +1,8 @@
 var express = require("express"),
     app     = express(),
     port    = parseInt(process.env.PORT, 10) || 8000,
-    server = app.listen(port),
-    nowjs = require("now"),
-    everyone = nowjs.initialize(server),
+    server = require('http').createServer(app),
+    io = require('socket.io').listen(server),
     globalVars = {
       rooms : [
         {
@@ -57,6 +56,8 @@ var express = require("express"),
       ]
     };
 
+server.listen(port);
+
 app.configure(function(){
     app.use(express.methodOverride());
     app.use(express.bodyParser());
@@ -69,8 +70,11 @@ app.configure(function(){
 });
     
 app.get("/", function(req, res) {
-    console.log('in /');
-    res.redirect("/site.html");       
+    res.sendfile(__dirname + "/public/site.html");
+});
+
+app.get("/login", function(req, res) {
+    res.sendfile(__dirname + "/public/site.html");
 });
 
 /*app.get("/login", function(req, res) {
@@ -107,11 +111,8 @@ app.get('/rooms', function(req, res) {
 
 app.post('/login/:username', function(req, res) {
     var username = req.params.username;
-    console.log('Gonna login (server)', username);
     if (globalVars.users.indexOf(username) === -1) {
         globalVars.users.push(username);
-        console.log(username, 'pushing this shit');
-        console.log(globalVars.users);
         var response = [];
         response.push(false);
         res.send({error: false});
@@ -133,10 +134,11 @@ app.post('/sendMsg', function(req, res) {
     res.send({hello: 'world'});
 });
 
-nowjs.on("connect", function(){
-    var username = this.now.name;
-    console.log("Joined: " + username);
-});
+io.sockets.on('connection', function (socket) {
+  socket.emit('news', { hello: 'world' });
+  socket.on('my other event', function (data) {
+    console.log(data);
+  });
 
 nowjs.on("disconnect", function () {
     //TODO, remove user from globalObject!
@@ -145,6 +147,7 @@ nowjs.on("disconnect", function () {
 
 everyone.now.postRoom = function(roomName, roomTopic) {
     var theUser = {};
+    var date = new Date();
     theUser.name = this.now.name;
     theUser.joined = date;
     theUser.admin = true;
@@ -177,10 +180,12 @@ everyone.now.joinRoom = function(roomId) {
     theUser.joined = date;
     theUser.admin = false;
     for (var i = 0; i < globalVars.rooms.length; i++) {
-        if(globalVars.rooms[i].id === roomId) {
+        if(globalVars.rooms[i].id === parseInt(roomId)) {
+            console.log(globalVars.rooms[i].users, 'users in room ', roomId);
             globalVars.rooms[i].users.push(theUser);
         }
     };
+    console.log(everyone.now, 'everyone.now');
     everyone.now.receiveUser(theUser);
 }
 

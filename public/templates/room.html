@@ -1,24 +1,20 @@
-<div ng-controller="RoomController">
+<h2> {{ room.name }} </h2>
 
-	<h2> {{ room.name }} </h2>
+<p> {{ room.topic }} </p>
 
-	<p> {{ room.topic }} </p>
+<div id="users">
+	<ul>
+		<li ng-repeat="user in room.users">
+			<p><b ui-if="user.admin">{{ user.joined | date: 'dd.MM.yyyy HH:mm' }} {{ user.name }}</b></p>
+			<p ui-if="!user.admin">{{ user.joined | date: 'dd.MM.yyyy HH:mm' }} {{ user.name }}</p>
+		</li>
+	</ul>
+</div>
 
-	<div id="users">
-		<ul>
-			<li ng-repeat="user in room.users">
-				<p><b ui-if="user.admin">{{ user.joined | date: 'dd.MM.yyyy HH:mm' }} {{ user.name }}</b></p>
-				<p ui-if="!user.admin">{{ user.joined | date: 'dd.MM.yyyy HH:mm' }} {{ user.name }}</p>
-			</li>
-		</ul>
+<div id="messages">
+	<p ng-repeat="message in room.messages"> <i> {{ message.date | date: 'dd.MM.yyyy HH:mm' }} </i> <b><{{ message.user }}> : </b> {{ message.msg }} </p>
+	<div>
+		<input type="text" id="message" ng-model="messagetext" ui-keypress="{13: 'sendMessage()'}" placeholder="What's on your mind?" autofocus name="message" />
+		<input type="submit" ng-click="sendMessage()" value="Send!" />
 	</div>
-
-	<div id="messages">
-		<p ng-repeat="message in room.messages"> <i> {{ message.date | date: 'dd.MM.yyyy HH:mm' }} </i> <b><{{ message.user }}> : </b> {{ message.msg }} </p>
-		<div>
-			<input type="text" id="message" ng-model="messagetext" ui-keypress="{13: 'sendMessage()'}" placeholder="What's on your mind?" autofocus name="message" />
-			<input type="submit" ng-click="sendMessage()" value="Send!" />
-		</div>
-	</div>
-
 </div>
