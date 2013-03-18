@@ -3,7 +3,11 @@ app.controller( 'RoomsController', ['$resource', '$scope', 'RoomsModel',  functi
 	$scope.username = now.name;
 
 	$scope.createRoom = function () {
-		now.postRoom($scope.roomName, $scope.roomTopic);
+		if($scope.roomName !== "" && $scope.roomTopic !== "") {
+			now.postRoom($scope.roomName, $scope.roomTopic);
+			$scope.roomName = "";
+			$scope.roomTopic = "";
+		}
 	};
 
 	now.receiveRoom = function(theRoom) {

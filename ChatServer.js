@@ -6,8 +6,45 @@ var express = require("express"),
     everyone = nowjs.initialize(server),
     globalVars = {
       rooms : [
-        {id: 1, name: 'Hangovers', users: ['bjerkins', 'nosugar', 'twoTimes'], topic: 'Talk about hangovers in Germany'},
-        {id: 2, name: 'CatFacts', users: ['bjerkins', 'nosugar'], topic: 'Talk about cats'}
+        {
+            id: 1,
+            name: 'Hangovers', 
+            users: [
+                {
+                    name: 'bjerkins', 
+                    joined: '2013-03-17T15:11:51.823Z', 
+                    admin: false
+                }, 
+                {
+                    name: 'nosugar', 
+                    joined: '2013-03-17T15:11:51.823Z',
+                    admin: false
+                },
+                { 
+                    name: 'twoTimes', 
+                    joined: '2013-03-17T15:11:51.823Z',
+                    admin: true
+                }
+            ], 
+            topic: 'Talk about hangovers in Germany'
+        },
+        {
+            id: 2, 
+            name: 'CatFacts', 
+            users: [
+                {
+                    name: 'bjerkins', 
+                    joined: '2013-03-17T15:11:51.823Z',
+                    admin: true
+                },
+                { 
+                    name: 'nosugar',
+                    joined: '2013-03-17T15:11:51.823Z',
+                    admin: false
+                }
+            ], 
+            topic: 'Talk about cats'
+        }
       ],
       messages: [
         {id: 1, roomId: 1, user: 'bjerkins', date: '2013-03-17T15:11:51.823Z', msg: 'Hah, I\'m so hungover after that monkey' },
@@ -32,12 +69,13 @@ app.configure(function(){
 });
     
 app.get("/", function(req, res) {
-    res.redirect("/site.html");
+    console.log('in /');
+    res.redirect("/site.html");       
 });
 
-app.get("/login", function(req, res) {
+/*app.get("/login", function(req, res) {
     res.send('logged in!');
-});
+});*/
 
 app.get('/rooms/:id', function(req, res) {
     var roomId = req.params.id;
@@ -72,11 +110,18 @@ app.post('/login/:username', function(req, res) {
     console.log('Gonna login (server)', username);
     if (globalVars.users.indexOf(username) === -1) {
         globalVars.users.push(username);
-        res.send(username);
+        console.log(username, 'pushing this shit');
+        console.log(globalVars.users);
+        var response = [];
+        response.push(false);
+        res.send({error: false});
     }
     else {
     //TODO, name probably taken, inform the user to pick another username
-        res.redirect('/');
+        console.log('user already exists');
+        var response = [];
+        response.push(true);
+        res.send({error: true});
     }
 });
 
@@ -99,10 +144,16 @@ nowjs.on("disconnect", function () {
 });
 
 everyone.now.postRoom = function(roomName, roomTopic) {
+    var theUser = {};
+    theUser.name = this.now.name;
+    theUser.joined = date;
+    theUser.admin = true;
     var theRoom = {};
     theRoom.id = globalVars.rooms.length + 1;
     theRoom.name = roomName;  
     theRoom.topic = roomTopic;
+    theRoom.users = [];
+    theRoom.users.push(theUser);
     globalVars.rooms.push(theRoom);
     everyone.now.receiveRoom(theRoom);
 };
@@ -118,6 +169,20 @@ everyone.now.postMessage = function(messageText, roomId) {
     globalVars.messages.push(theMessage);
     everyone.now.receiveMessage(theMessage);
 };
+
+everyone.now.joinRoom = function(roomId) {
+    var date = new Date();
+    var theUser = {};
+    theUser.name = this.now.name;
+    theUser.joined = date;
+    theUser.admin = false;
+    for (var i = 0; i < globalVars.rooms.length; i++) {
+        if(globalVars.rooms[i].id === roomId) {
+            globalVars.rooms[i].users.push(theUser);
+        }
+    };
+    everyone.now.receiveUser(theUser);
+}
 
 
 
