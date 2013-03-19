@@ -2,11 +2,13 @@
 
 <p> {{ room.topic }} </p>
 
+{{ kickmessage }}
+
 <div id="users">
 	<ul>
 		<li ng-repeat="user in room.users">
-			<p><b ui-if="user.admin">{{ user.joined | date: 'dd.MM.yyyy HH:mm' }} {{ user.name }}</b></p>
-			<p ui-if="!user.admin">{{ user.joined | date: 'dd.MM.yyyy HH:mm' }} {{ user.name }}</p>
+			<p><b ui-if="user.name == room.admin">{{ user.joined | date: 'dd.MM.yyyy HH:mm' }} {{ user.name }}</b></p>
+			<p ui-if="user.name != room.admin">{{ user.joined | date: 'dd.MM.yyyy HH:mm' }} {{ user.name }}</p>
 		</li>
 	</ul>
 </div>
@@ -14,7 +16,11 @@
 <div id="messages">
 	<p ng-repeat="message in room.messages"> <i> {{ message.date | date: 'dd.MM.yyyy HH:mm' }} </i> <b><{{ message.user }}> : </b> {{ message.msg }} </p>
 	<div>
-		<input type="text" id="message" ng-model="messagetext" ui-keypress="{13: 'sendMessage()'}" placeholder="What's on your mind?" autofocus name="message" />
+		<input type="text" style="width: 50%;" id="message" ng-model="messagetext" ui-keypress="{13: 'sendMessage()'}" placeholder="What's on your mind?" autofocus name="message" />
 		<input type="submit" ng-click="sendMessage()" value="Send!" />
 	</div>
 </div>
+
+<ul>
+	<li><p>To kick a user, type /kick <i>username</i>. Do note that you have to be admin</p></li>
+</ul>

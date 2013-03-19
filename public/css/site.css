@@ -1,0 +1,12 @@
+
+
+
+
+#roomCreate input {
+	display: block;
+	width: 30%;
+}
+
+#messages {
+	border: 1px solid black;
+}
